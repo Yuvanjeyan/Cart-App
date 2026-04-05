@@ -10,44 +10,45 @@ export default function Home() {
   const [loading, setLoading] = useState(false);
 
   useEffect(() => {
-    loadProducts();
+    const fetchProducts = async () => {
+      try {
+        const { data } = await axios.get(`/list-products/1`);
+        setProducts(data);
+      } catch (err) {
+        console.log(err);
+      }
+    };
+
+    const getTotal = async () => {
+      try {
+        const { data } = await axios.get("/products-count");
+        setTotal(data);
+      } catch (err) {
+        console.log(err);
+      }
+    };
+
+    fetchProducts();
     getTotal();
   }, []);
 
   useEffect(() => {
     if (page === 1) return;
-    loadMore();
+
+    const loadMoreProducts = async () => {
+      try {
+        setLoading(true);
+        const { data } = await axios.get(`/list-products/${page}`);
+        setProducts((current) => [...current, ...data]);
+        setLoading(false);
+      } catch (err) {
+        console.log(err);
+        setLoading(false);
+      }
+    };
+
+    loadMoreProducts();
   }, [page]);
-
-  const getTotal = async () => {
-    try {
-      const { data } = await axios.get("/products-count");
-      setTotal(data);
-    } catch (err) {
-      console.log(err);
-    }
-  };
-
-  const loadProducts = async () => {
-    try {
-      const { data } = await axios.get(`/list-products/${page}`);
-      setProducts(data);
-    } catch (err) {
-      console.log(err);
-    }
-  };
-
-  const loadMore = async () => {
-    try {
-      setLoading(true);
-      const { data } = await axios.get(`/list-products/${page}`);
-      setProducts([...products, ...data]);
-      setLoading(false);
-    } catch (err) {
-      console.log(err);
-      setLoading(false);
-    }
-  };
 
   const arr = [...products];
   const sortedBySold = arr?.sort((a, b) => (a.sold < b.sold ? 1 : -1));

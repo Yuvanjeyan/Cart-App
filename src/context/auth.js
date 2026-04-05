@@ -18,7 +18,11 @@ const AuthProvider = ({ children }) => {
     const data = localStorage.getItem("auth");
     if (data) {
       const parsed = JSON.parse(data);
-      setAuth({ ...auth, user: parsed.user, token: parsed.token });
+      setAuth((current) => ({
+        ...current,
+        user: parsed.user,
+        token: parsed.token,
+      }));
     }
   }, []);
 

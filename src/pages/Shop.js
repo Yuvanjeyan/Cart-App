@@ -12,47 +12,48 @@ export default function Shop() {
   const [radio, setRadio] = useState([]); // radio
 
   useEffect(() => {
+    const loadProducts = async () => {
+      try {
+        const { data } = await axios.get("/products");
+        setProducts(data);
+      } catch (err) {
+        console.log(err);
+      }
+    };
+
     if (!checked.length || !radio.length) loadProducts();
-  }, []);
+  }, [checked.length, radio.length]);
 
   useEffect(() => {
+    const loadFilteredProducts = async () => {
+      try {
+        const { data } = await axios.post("/filtered-products", {
+          checked,
+          radio,
+        });
+        console.log("filtered products => ", data);
+        setProducts(data);
+      } catch (err) {
+        console.log(err);
+      }
+    };
+
     if (checked.length || radio.length) loadFilteredProducts();
   }, [checked, radio]);
 
-  const loadFilteredProducts = async () => {
-    try {
-      const { data } = await axios.post("/filtered-products", {
-        checked,
-        radio,
-      });
-      console.log("filtered products => ", data);
-      setProducts(data);
-    } catch (err) {
-      console.log(err);
-    }
-  };
-
-  const loadProducts = async () => {
-    try {
-      const { data } = await axios.get("/products");
-      setProducts(data);
-    } catch (err) {
-      console.log(err);
-    }
-  };
 
   useEffect(() => {
+    const loadCatgories = async () => {
+      try {
+        const { data } = await axios.get("/categories");
+        setCategories(data);
+      } catch (err) {
+        console.log(err);
+      }
+    };
+
     loadCatgories();
   }, []);
-
-  const loadCatgories = async () => {
-    try {
-      const { data } = await axios.get("/categories");
-      setCategories(data);
-    } catch (err) {
-      console.log(err);
-    }
-  };
 
   const handleCheck = (value, id) => {
     console.log(value, id);

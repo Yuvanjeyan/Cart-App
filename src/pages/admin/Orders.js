@@ -11,17 +11,16 @@ const { Option } = Select;
 
 export default function AdminOrders() {
   // context
-  const [auth, setAuth] = useAuth();
+  const [auth] = useAuth();
   // state
   const [orders, setOrders] = useState([]);
-  const [status, setStatus] = useState([
+  const [status] = useState([
     "Not processed",
     "Processing",
     "Shipped",
     "Delivered",
     "Cancelled",
   ]);
-  const [changedStatus, setChangedStatus] = useState("");
 
   useEffect(() => {
     if (auth?.token) getOrders();
@@ -37,9 +36,8 @@ export default function AdminOrders() {
   };
 
   const handleChange = async (orderId, value) => {
-    setChangedStatus(value);
     try {
-      const { data } = await axios.put(`/order-status/${orderId}`, {
+      await axios.put(`/order-status/${orderId}`, {
         status: value,
       });
       getOrders();

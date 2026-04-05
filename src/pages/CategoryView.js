@@ -12,18 +12,18 @@ export default function CategoryView() {
   const params = useParams();
 
   useEffect(() => {
-    if (params?.slug) loadProductsByCatgory();
-  }, [params?.slug]);
+    const loadProductsByCategory = async () => {
+      try {
+        const { data } = await axios.get(`/products-by-category/${params.slug}`);
+        setCategory(data.category);
+        setProducts(data.products);
+      } catch (err) {
+        console.log(err);
+      }
+    };
 
-  const loadProductsByCatgory = async () => {
-    try {
-      const { data } = await axios.get(`/products-by-category/${params.slug}`);
-      setCategory(data.category);
-      setProducts(data.products);
-    } catch (err) {
-      console.log(err);
-    }
-  };
+    if (params?.slug) loadProductsByCategory();
+  }, [params?.slug]);
 
   return (
     <>

@@ -28,36 +28,36 @@ export default function AdminProductUpdate() {
   const params = useParams();
 
   useEffect(() => {
-    loadProduct();
-  }, []);
+    const loadProduct = async () => {
+      try {
+        const { data } = await axios.get(`/product/${params.slug}`);
+        setName(data.name);
+        setDescription(data.description);
+        setPrice(data.price);
+        setCategory(data.category._id);
+        setShipping(data.shipping);
+        setQuantity(data.quantity);
+        setId(data._id);
+      } catch (err) {
+        console.log(err);
+      }
+    };
+
+    if (params?.slug) loadProduct();
+  }, [params?.slug]);
 
   useEffect(() => {
+    const loadCategories = async () => {
+      try {
+        const { data } = await axios.get("/categories");
+        setCategories(data);
+      } catch (err) {
+        console.log(err);
+      }
+    };
+
     loadCategories();
   }, []);
-
-  const loadCategories = async () => {
-    try {
-      const { data } = await axios.get("/categories");
-      setCategories(data);
-    } catch (err) {
-      console.log(err);
-    }
-  };
-
-  const loadProduct = async () => {
-    try {
-      const { data } = await axios.get(`/product/${params.slug}`);
-      setName(data.name);
-      setDescription(data.description);
-      setPrice(data.price);
-      setCategory(data.category._id);
-      setShipping(data.shipping);
-      setQuantity(data.quantity);
-      setId(data._id);
-    } catch (err) {
-      console.log(err);
-    }
-  };
 
   const handleSubmit = async (e) => {
     e.preventDefault();

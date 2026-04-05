@@ -42,18 +42,18 @@ export default function ProductView() {
     : null;
 
   useEffect(() => {
+    const loadProduct = async () => {
+      try {
+        const { data } = await axios.get(`/product/${params.slug}`);
+        setProduct(data);
+        loadRelated(data._id, data.category._id);
+      } catch (err) {
+        console.log(err);
+      }
+    };
+
     if (params?.slug) loadProduct();
   }, [params?.slug]);
-
-  const loadProduct = async (req, res) => {
-    try {
-      const { data } = await axios.get(`/product/${params.slug}`);
-      setProduct(data);
-      loadRelated(data._id, data.category._id);
-    } catch (err) {
-      console.log(err);
-    }
-  };
 
   const loadRelated = async (productId, categoryId) => {
     try {

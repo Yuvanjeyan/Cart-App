@@ -40,12 +40,13 @@ export default function Menu() {
             </li>
             <li>
               <div className="dropdown">
-                <a
+                <button
+                  type="button"
                   className="nav-link pointer dropdown-toggle store-nav__link"
                   data-bs-toggle="dropdown"
                 >
                   CATEGORIES
-                </a>
+                </button>
 
                 <ul className="dropdown-menu store-nav__dropdown">
                   <li>
@@ -97,12 +98,13 @@ export default function Menu() {
             </ul>
           ) : (
             <div className="dropdown store-nav__user">
-              <a
+              <button
+                type="button"
                 className="nav-link pointer dropdown-toggle store-nav__link"
                 data-bs-toggle="dropdown"
               >
                 {auth?.user?.name?.toUpperCase()}
-              </a>
+              </button>
 
               <ul className="dropdown-menu">
                 <li>
@@ -117,9 +119,13 @@ export default function Menu() {
                 </li>
 
                 <li className="nav-item pointer">
-                  <a onClick={logout} className="nav-link">
+                  <button
+                    type="button"
+                    onClick={logout}
+                    className="nav-link btn btn-link p-0"
+                  >
                     Logout
-                  </a>
+                  </button>
                 </li>
               </ul>
             </div>

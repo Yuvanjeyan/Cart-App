@@ -22,8 +22,7 @@ export default function Checkout() {
   const [step, setStep] = useState(1); // 1: Shipping, 2: Payment
   const [loading, setLoading] = useState(false);
   const [shippingAddress, setShippingAddress] = useState(null);
-  const [orderData, setOrderData] = useState(null);
-  const [discount, setDiscount] = useState(0);
+  const [discount] = useState(0);
   const [notes, setNotes] = useState("");
 
   // Hooks
@@ -105,8 +104,6 @@ export default function Checkout() {
         setLoading(false);
         return;
       }
-
-      setOrderData(data);
 
       // Process payment based on method
       if (paymentData.paymentMethod === "razorpay") {

@@ -18,21 +18,21 @@ export default function CheckoutSuccess() {
       return;
     }
 
-    fetchOrder();
-  }, [orderId, auth?.token]);
+    const fetchOrder = async () => {
+      try {
+        const { data } = await axios.get(`/api/order/${orderId}`);
+        setOrder(data);
+      } catch (err) {
+        console.log(err);
+        toast.error("Order not found");
+        navigate("/");
+      } finally {
+        setLoading(false);
+      }
+    };
 
-  const fetchOrder = async () => {
-    try {
-      const { data } = await axios.get(`/api/order/${orderId}`);
-      setOrder(data);
-    } catch (err) {
-      console.log(err);
-      toast.error("Order not found");
-      navigate("/");
-    } finally {
-      setLoading(false);
-    }
-  };
+    fetchOrder();
+  }, [orderId, auth?.token, navigate]);
 
   if (loading) {
     return (

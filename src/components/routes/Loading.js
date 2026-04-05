@@ -11,16 +11,19 @@ export default function Loading({ path = "register" }) {
 
   useEffect(() => {
     const interval = setInterval(() => {
-      setCount((currentCount) => --currentCount);
+      setCount((currentCount) => currentCount - 1);
     }, 1000);
-    // redirect once count is equal to 0
-    count === 0 &&
+
+    return () => clearInterval(interval);
+  }, []);
+
+  useEffect(() => {
+    if (count === 0) {
       navigate(`/${path}`, {
         state: location.pathname,
       });
-    // cleanup
-    return () => clearInterval(interval);
-  }, [count]);
+    }
+  }, [count, navigate, location.pathname, path]);
 
   return (
     <div
