@@ -88,7 +88,7 @@ export default function Checkout() {
       }));
 
       // Create order on backend
-      const { data } = await axios.post("/api/order/create", {
+      const { data } = await axios.post("/order/create", {
         orderItems,
         shippingAddress,
         billingAddress: shippingAddress, // Using same as shipping for now
@@ -133,10 +133,7 @@ export default function Checkout() {
         return;
       }
 
-      // Create Razorpay order (assuming endpoint exists)
       const { data: paymentData } = await axios.post("/razorpay/order", {
-        amount: totals.total * 100, // Razorpay expects amount in paise
-        orderId: order._id,
         cart,
       });
 
@@ -167,7 +164,7 @@ export default function Checkout() {
         handler: async (response) => {
           try {
             // Verify payment
-            await axios.post(`/api/order/payment/${order._id}`, {
+            await axios.put(`/order/payment/${order._id}`, {
               razorpayOrderId: response.razorpay_order_id,
               razorpayPaymentId: response.razorpay_payment_id,
               razorpaySignature: response.razorpay_signature,

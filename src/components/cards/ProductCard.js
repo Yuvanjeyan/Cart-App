@@ -24,16 +24,21 @@ export default function ProductCard({ p }) {
               ? `${p?.quantity - p?.sold} in stock`
             : "Out of stock"
           }`}
-          placement="start"
-          color="green"
+            placement="start"
+            color="green"
         >
-          <div className="product-card__media">
+          <button
+            type="button"
+            className="product-card__media product-card__media-button"
+            onClick={() => navigate(`/product/${p.slug}`)}
+            aria-label={`Open ${p?.name}`}
+          >
             <img
               className="card-img-top product-card__image"
               src={`${API_BASE}/product/photo/${p._id}`}
               alt={p.name}
             />
-          </div>
+          </button>
         </Badge.Ribbon>
       </Badge.Ribbon>
 
@@ -53,13 +58,6 @@ export default function ProductCard({ p }) {
       </div>
 
       <div className="d-flex justify-content-between product-card__actions">
-        <button
-          className="btn btn-primary col card-button"
-          onClick={() => navigate(`/product/${p.slug}`)}
-        >
-          View Product
-        </button>
-
         <button
           className="btn btn-outline-primary col card-button"
           onClick={() => {

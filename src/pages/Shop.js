@@ -21,7 +21,7 @@ export default function Shop() {
       }
     };
 
-    if (!checked.length || !radio.length) loadProducts();
+    if (!checked.length && !radio.length) loadProducts();
   }, [checked.length, radio.length]);
 
   useEffect(() => {
@@ -109,7 +109,10 @@ export default function Shop() {
               <div className="pt-2">
               <button
                 className="btn btn-outline-secondary col-12 store-pill-button"
-                onClick={() => window.location.reload()}
+                onClick={() => {
+                  setChecked([]);
+                  setRadio([]);
+                }}
               >
                 Reset
               </button>

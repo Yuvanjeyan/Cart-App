@@ -3,7 +3,7 @@ import Jumbotron from "../../components/cards/Jumbotron";
 import axios from "axios";
 import toast from "react-hot-toast";
 import { useAuth } from "../../context/auth";
-import { useNavigate, useLocation } from "react-router-dom";
+import { useNavigate, useLocation, Link } from "react-router-dom";
 
 export default function Login() {
   // state
@@ -66,6 +66,10 @@ export default function Login() {
                 value={password}
                 onChange={(e) => setPassword(e.target.value)}
               />
+
+              <div className="mb-4 text-end">
+                <Link to="/forgot-password">Forgot password?</Link>
+              </div>
 
               <select
                 className="form-control mb-4 p-3"

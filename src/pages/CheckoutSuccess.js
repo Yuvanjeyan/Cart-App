@@ -20,7 +20,7 @@ export default function CheckoutSuccess() {
 
     const fetchOrder = async () => {
       try {
-        const { data } = await axios.get(`/api/order/${orderId}`);
+        const { data } = await axios.get(`/order/${orderId}`);
         setOrder(data);
       } catch (err) {
         console.log(err);
@@ -282,9 +282,17 @@ export default function CheckoutSuccess() {
                 </li>
                 <li>You can track your order from the "My Orders" section</li>
                 <li>
-                  Expected delivery within 3-5 business days to{" "}
-                  <strong>{order.shippingAddress.city}</strong>
+                  {order.shipping?.estimatedDelivery ? (
+                    <>Estimated delivery by <strong>{new Date(order.shipping.estimatedDelivery).toLocaleDateString()}</strong></>
+                  ) : (
+                    <>Expected delivery within 3-5 business days to <strong>{order.shippingAddress.city}</strong></>
+                  )}
                 </li>
+                {order.shipping?.trackingNumber && (
+                  <li>
+                    Tracking Number: <strong>{order.shipping.trackingNumber}</strong> ({order.shipping.carrier})
+                  </li>
+                )}
                 <li>
                   For any queries, contact us at support@ecommerce.com or call
                   1-800-SHOP-NOW

@@ -4,7 +4,6 @@ import Jumbotron from "../../components/cards/Jumbotron";
 import UserMenu from "../../components/nav/UserMenu";
 import axios from "axios";
 import moment from "moment";
-import ProductCardHorizontal from "../../components/cards/ProductCardHorizontal";
 
 export default function UserOrders() {
   // context
@@ -48,28 +47,43 @@ export default function UserOrders() {
                       <tr>
                         <th scope="col">#</th>
                         <th scope="col">Status</th>
-                        <th scope="col">Buyer</th>
                         <th scope="col">Ordered</th>
                         <th scope="col">Payment</th>
-                        <th scope="col">Quantity</th>
+                        <th scope="col">Items</th>
                       </tr>
                     </thead>
                     <tbody>
                       <tr>
                         <td>{i + 1}</td>
                         <td>{o?.status}</td>
-                        <td>{o?.buyer?.name}</td>
                         <td>{moment(o?.createdAt).fromNow()}</td>
-                        <td>{o?.payment?.success ? "Success" : "Failed"}</td>
-                        <td>{o?.products?.length} products</td>
+                        <td>{o?.payment?.status === "completed" ? "Success" : "Failed"}</td>
+                        <td>{o?.orderItems?.length} items</td>
                       </tr>
                     </tbody>
                   </table>
 
                   <div className="container">
                     <div className="row m-2">
-                      {o?.products?.map((p, i) => (
-                        <ProductCardHorizontal key={i} p={p} remove={false} />
+                      <div className="col-md-6">
+                        <h6>Shipping Information</h6>
+                        <p>Status: {o?.status}</p>
+                        <p>Tracking: {o?.shipping?.trackingNumber || "Not available"}</p>
+                        <p>Carrier: {o?.shipping?.carrier || "Not available"}</p>
+                        <p>Est. Delivery: {o?.shipping?.estimatedDelivery ? moment(o.shipping.estimatedDelivery).format("DD/MM/YYYY") : "Not set"}</p>
+                      </div>
+                    </div>
+                    <div className="row m-2">
+                      {o?.orderItems?.map((item, i) => (
+                        <div key={i} className="col-md-4">
+                          <div className="card mb-3">
+                            <div className="card-body">
+                              <h6 className="card-title">{item?.product?.name}</h6>
+                              <p className="card-text">Quantity: {item?.quantity}</p>
+                              <p className="card-text">Price: ₹{item?.price}</p>
+                            </div>
+                          </div>
+                        </div>
                       ))}
                     </div>
                   </div>

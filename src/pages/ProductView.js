@@ -30,6 +30,11 @@ export default function ProductView() {
   const [rating, setRating] = useState("5");
   const [comment, setComment] = useState("");
   const [submittingReview, setSubmittingReview] = useState(false);
+  const [reviewEligibility, setReviewEligibility] = useState({
+    canReview: false,
+    hasReviewed: false,
+    message: "Login is required to submit a review.",
+  });
   // hooks
   const params = useParams();
   const saved = isWishlisted(auth, product?._id);
@@ -54,6 +59,35 @@ export default function ProductView() {
 
     if (params?.slug) loadProduct();
   }, [params?.slug]);
+
+  useEffect(() => {
+    const loadReviewEligibility = async () => {
+      if (!auth?.token || !product?._id) {
+        setReviewEligibility({
+          canReview: false,
+          hasReviewed: false,
+          message: "Login is required to submit a review.",
+        });
+        return;
+      }
+
+      try {
+        const { data } = await axios.get(
+          `/product/${product._id}/review-eligibility`
+        );
+        setReviewEligibility(data);
+      } catch (err) {
+        console.log(err);
+        setReviewEligibility({
+          canReview: false,
+          hasReviewed: false,
+          message: "Please purchase the product and submit the feedback",
+        });
+      }
+    };
+
+    loadReviewEligibility();
+  }, [auth?.token, product?._id]);
 
   const loadRelated = async (productId, categoryId) => {
     try {
@@ -88,6 +122,12 @@ export default function ProductView() {
       setProduct((current) => ({
         ...current,
         reviews: data?.reviews || [],
+      }));
+      setReviewEligibility((current) => ({
+        ...current,
+        canReview: true,
+        hasReviewed: true,
+        message: "You can update your review for this delivered order.",
       }));
       setComment("");
       setRating("5");
@@ -132,6 +172,21 @@ export default function ProductView() {
               <h1 className="fw-bold product-detail-card__title">
                 {product?.name}
               </h1>
+              <div className="product-detail-card__summary">
+                <div className="product-detail-card__summary-price">
+                  <span className="product-detail-card__summary-label">Price</span>
+                  <strong>
+                    <FaRupeeSign />{" "}
+                    {product?.price?.toLocaleString("en-US", {
+                      style: "currency",
+                      currency: "INR",
+                    })}
+                  </strong>
+                </div>
+                <div className="product-detail-card__summary-stock">
+                  {product?.quantity > 0 ? "In Stock" : "Out of Stock"}
+                </div>
+              </div>
               <p className="card-text lead product-detail-card__description">
                 {product?.description}
               </p>
@@ -140,51 +195,56 @@ export default function ProductView() {
             <div className="product-detail-card__stats">
               <div className="row g-3">
                 <div className="col-sm-6">
-                  <p className="product-detail-card__stat">
-                    Reviews: {reviews.length}{" "}
-                    {averageRating ? `(Avg ${averageRating}/5)` : ""}
-                  </p>
+                  <div className="product-detail-card__stat">
+                    <span className="product-detail-card__stat-label">Reviews</span>
+                    <strong>{reviews.length} {averageRating ? `(Avg ${averageRating}/5)` : ""}</strong>
+                  </div>
                 </div>
 
                 <div className="col-sm-6">
-                  <p className="product-detail-card__stat">
-                  <FaRupeeSign /> Price:{" "}
-                  {product?.price?.toLocaleString("en-US", {
-                    style: "currency",
-                    currency: "INR",
-                  })}
-                  </p>
+                  <div className="product-detail-card__stat">
+                    <span className="product-detail-card__stat-label">Price</span>
+                    <strong><FaRupeeSign /> {product?.price?.toLocaleString("en-US", {
+                      style: "currency",
+                      currency: "INR",
+                    })}</strong>
+                  </div>
                 </div>
 
                 <div className="col-sm-6">
-                  <p className="product-detail-card__stat">
-                  <FaProjectDiagram /> Category: {product?.category?.name}
-                  </p>
+                  <div className="product-detail-card__stat">
+                    <span className="product-detail-card__stat-label">Category</span>
+                    <strong><FaProjectDiagram /> {product?.category?.name}</strong>
+                  </div>
                 </div>
 
                 <div className="col-sm-6">
-                  <p className="product-detail-card__stat">
-                  <FaRegClock /> Added: {moment(product.createdAt).fromNow()}
-                  </p>
+                  <div className="product-detail-card__stat">
+                    <span className="product-detail-card__stat-label">Added</span>
+                    <strong><FaRegClock /> {moment(product.createdAt).fromNow()}</strong>
+                  </div>
                 </div>
 
                 <div className="col-sm-6">
-                  <p className="product-detail-card__stat">
-                  {product?.quantity > 0 ? <FaCheck /> : <FaTimes />}{" "}
-                  {product?.quantity > 0 ? "In Stock" : "Out of Stock"}
-                  </p>
+                  <div className="product-detail-card__stat">
+                    <span className="product-detail-card__stat-label">Availability</span>
+                    <strong>{product?.quantity > 0 ? <FaCheck /> : <FaTimes />}{" "}
+                    {product?.quantity > 0 ? "In Stock" : "Out of Stock"}</strong>
+                  </div>
                 </div>
 
                 <div className="col-sm-6">
-                  <p className="product-detail-card__stat">
-                  <FaWarehouse /> Available {product?.quantity - product?.sold}
-                  </p>
+                  <div className="product-detail-card__stat">
+                    <span className="product-detail-card__stat-label">Available</span>
+                    <strong><FaWarehouse /> {product?.quantity - product?.sold}</strong>
+                  </div>
                 </div>
 
                 <div className="col-sm-6">
-                  <p className="product-detail-card__stat">
-                  <FaRocket /> Sold {product.sold}
-                  </p>
+                  <div className="product-detail-card__stat">
+                    <span className="product-detail-card__stat-label">Sold</span>
+                    <strong><FaRocket /> {product.sold}</strong>
+                  </div>
                 </div>
               </div>
             </div>
@@ -270,15 +330,17 @@ export default function ProductView() {
                 <button
                   type="submit"
                   className="btn btn-primary store-pill-button"
-                  disabled={submittingReview}
+                  disabled={submittingReview || !reviewEligibility.canReview}
                 >
-                  {submittingReview ? "Submitting..." : "Submit Review"}
+                  {submittingReview
+                    ? "Submitting..."
+                    : reviewEligibility.hasReviewed
+                    ? "Update Review"
+                    : "Submit Review"}
                 </button>
-                {!auth?.token && (
-                  <span className="review-form__hint">
-                    Login is required to submit a review.
-                  </span>
-                )}
+                <span className="review-form__hint">
+                  {reviewEligibility.message}
+                </span>
               </div>
             </form>
 
