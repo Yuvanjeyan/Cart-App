@@ -24,6 +24,11 @@ export default function AdminProduct() {
   // hook
   const navigate = useNavigate();
 
+  const handleNumericChange = (setter) => (e) => {
+    const sanitizedValue = e.target.value.replace(/[^\d]/g, "");
+    setter(sanitizedValue);
+  };
+
   useEffect(() => {
     loadCategories();
   }, []);
@@ -118,11 +123,12 @@ export default function AdminProduct() {
               />
 
               <input
-                type="number"
+                type="text"
+                inputMode="numeric"
                 className="form-control p-3 mb-3"
                 placeholder="Enter price"
                 value={price}
-                onChange={(e) => setPrice(e.target.value)}
+                onChange={handleNumericChange(setPrice)}
               />
 
               <Select
@@ -151,12 +157,12 @@ export default function AdminProduct() {
               </Select>
 
               <input
-                type="number"
-                min="1"
+                type="text"
+                inputMode="numeric"
                 className="form-control p-3 mb-3"
                 placeholder="Enter quantity"
                 value={quantity}
-                onChange={(e) => setQuantity(e.target.value)}
+                onChange={handleNumericChange(setQuantity)}
               />
 
               <button

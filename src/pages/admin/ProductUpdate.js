@@ -27,6 +27,11 @@ export default function AdminProductUpdate() {
   const navigate = useNavigate();
   const params = useParams();
 
+  const handleNumericChange = (setter) => (e) => {
+    const sanitizedValue = e.target.value.replace(/[^\d]/g, "");
+    setter(sanitizedValue);
+  };
+
   useEffect(() => {
     const loadProduct = async () => {
       try {
@@ -163,11 +168,12 @@ export default function AdminProductUpdate() {
               />
 
               <input
-                type="number"
+                type="text"
+                inputMode="numeric"
                 className="form-control p-3 mb-3"
                 placeholder="Enter price"
                 value={price}
-                onChange={(e) => setPrice(e.target.value)}
+                onChange={handleNumericChange(setPrice)}
               />
 
               <Select
@@ -198,12 +204,12 @@ export default function AdminProductUpdate() {
               </Select>
 
               <input
-                type="number"
-                min="1"
+                type="text"
+                inputMode="numeric"
                 className="form-control p-3 mb-3"
                 placeholder="Enter quantity"
                 value={quantity}
-                onChange={(e) => setQuantity(e.target.value)}
+                onChange={handleNumericChange(setQuantity)}
               />
 
               <div className="d-flex justify-content-between flex-wrap gap-3">
