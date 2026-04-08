@@ -97,37 +97,56 @@ export default function Menu() {
               </li>
             </ul>
           ) : (
-            <div className="dropdown store-nav__user">
-              <button
-                type="button"
-                className="nav-link pointer dropdown-toggle store-nav__link"
-                data-bs-toggle="dropdown"
-              >
-                {auth?.user?.name?.toUpperCase()}
-              </button>
+            <div className="d-flex align-items-center gap-2">
+              {auth?.user?.role !== 1 && (
+                <NavLink
+                  className="nav-link store-nav__link"
+                  to="/dashboard/user/wishlist"
+                >
+                  WISHLIST
+                </NavLink>
+              )}
 
-              <ul className="dropdown-menu">
-                <li>
-                  <NavLink
-                    className="nav-link"
-                    to={`/dashboard/${
-                      auth?.user?.role === 1 ? "admin" : "user"
-                    }`}
-                  >
-                    Dashboard
-                  </NavLink>
-                </li>
+              <div className="dropdown store-nav__user">
+                <button
+                  type="button"
+                  className="nav-link pointer dropdown-toggle store-nav__link"
+                  data-bs-toggle="dropdown"
+                >
+                  {auth?.user?.name?.toUpperCase()}
+                </button>
 
-                <li className="nav-item pointer">
-                  <button
-                    type="button"
-                    onClick={logout}
-                    className="nav-link btn btn-link p-0"
-                  >
-                    Logout
-                  </button>
-                </li>
-              </ul>
+                <ul className="dropdown-menu">
+                  <li>
+                    <NavLink
+                      className="nav-link"
+                      to={`/dashboard/${
+                        auth?.user?.role === 1 ? "admin" : "user"
+                      }`}
+                    >
+                      Dashboard
+                    </NavLink>
+                  </li>
+
+                  {auth?.user?.role !== 1 && (
+                    <li>
+                      <NavLink className="nav-link" to="/dashboard/user/wishlist">
+                        Wishlist
+                      </NavLink>
+                    </li>
+                  )}
+
+                  <li className="nav-item pointer">
+                    <button
+                      type="button"
+                      onClick={logout}
+                      className="nav-link btn btn-link p-0"
+                    >
+                      Logout
+                    </button>
+                  </li>
+                </ul>
+              </div>
             </div>
           )}
         </div>
