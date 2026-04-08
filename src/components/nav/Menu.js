@@ -101,7 +101,7 @@ export default function Menu() {
               {auth?.user?.role !== 1 && (
                 <NavLink
                   className="nav-link store-nav__link"
-                  to="/dashboard/user/wishlist"
+                  to="/wishlist"
                 >
                   WISHLIST
                 </NavLink>
@@ -127,15 +127,6 @@ export default function Menu() {
                       Dashboard
                     </NavLink>
                   </li>
-
-                  {auth?.user?.role !== 1 && (
-                    <li>
-                      <NavLink className="nav-link" to="/dashboard/user/wishlist">
-                        Wishlist
-                      </NavLink>
-                    </li>
-                  )}
-
                   <li className="nav-item pointer">
                     <button
                       type="button"

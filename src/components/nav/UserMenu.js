@@ -18,12 +18,6 @@ export default function UserMenu() {
             Orders
             </NavLink>
           </li>
-
-          <li>
-            <NavLink className="list-group-item side-menu__item" to="/dashboard/user/wishlist">
-            Wishlist
-            </NavLink>
-          </li>
         </ul>
       </div>
     </>

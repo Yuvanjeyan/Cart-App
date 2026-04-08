@@ -54,6 +54,9 @@ export default function App() {
         <Route path="/checkout/success/:orderId" element={<PrivateRoute />}>
           <Route index element={<CheckoutSuccess />} />
         </Route>
+        <Route path="/wishlist" element={<PrivateRoute />}>
+          <Route index element={<UserWishlist />} />
+        </Route>
         <Route path="/login" element={<Login />} />
         <Route path="/register" element={<Register />} />
         <Route path="/forgot-password" element={<ForgotPassword />} />
@@ -62,7 +65,6 @@ export default function App() {
           <Route path="user" element={<Dashboard />} />
           <Route path="user/profile" element={<UserProfile />} />
           <Route path="user/orders" element={<UserOrders />} />
-          <Route path="user/wishlist" element={<UserWishlist />} />
         </Route>
 
         <Route path="/dashboard" element={<AdminRoute />}>
